@@ -3,8 +3,8 @@ import UIKit
 
 class Node<T> {
     var value: T
-    var left: Node<T>? = nil
-    var right: Node<T>? = nil
+    var left: Node<T>?
+    var right: Node<T>?
     
     init(value: T) {
         self.value = value
@@ -12,19 +12,34 @@ class Node<T> {
 }
 
 struct BinarySearchTree<T: Comparable> {
-    var root: Node<T>? = nil
+    var root: Node<T>?
     
+     /*
+      We are building the following tree: (look into insert calls)
+      
+                           Tree
+                            10
+                   6                  15
+             3          8                     20
+      
+      With dfsPreOrder, we are first traversing through the left side of the tree. this means 10 - 6 - 3.
+      Then, we work our way up from the bottom: we add 8 so -> 10 - 6 - 3 - 8 we complete the left side. After this is done, we traverse the right side -> 15 - 20. Both 15 and 20 do not have left nodes so our end result of dfsPreOrder should be -> 10 - 6 - 3 - 8 - 15 - 20
+      
+      */
+
     
     func dfsPreOrder() -> [Node<T>?] {
         var data = [Node<T>?]()
         let rootVal = self.root // 10
+        
+        // working recursively; LIFO Approach; Last call in the callstack is first one out
         func traverse(node: Node<T>?) {
-            data.append(node) // [10]
-            if let leftNode = node?.left {
-                traverse(node: leftNode) // [10,6,3]
+            data.append(node) // Follow this with the recursive calls, this is the endresult-> [10,6,3,8,15,20]
+            if let leftNode = node?.left { //
+                traverse(node: leftNode) // 1. traverse(10), 2. traverse(6), 3. traverse(3), 4.traverse(3) gets popped off callstack because there is neither leftNode nor rightNode,
             }
             if let rightNode = node?.right {
-                traverse(node: rightNode) 
+                traverse(node: rightNode) // 5. traverse(8), 6. traverse(8) gets popped off callstack, 7. traverse(6) gets popped off callstack, 8. traverse(15), 9. traverse(20), 10. traverse(20) gets popped off callstack, 11. traverse(15) gets popped off callstack, 12. traverse(10) gets popped off callstack -> recursion completed, all calls have been called off the stack
             }
         }
         traverse(node: rootVal)
