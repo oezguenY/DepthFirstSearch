@@ -48,6 +48,25 @@ struct BinarySearchTree<T: Comparable> {
         return data
     }
     
+    func dfsInOrder() -> [Node<T>?] {
+        let root = self.root
+        var data = [Node<T>?]()
+        
+        func traverse(node: Node<T>?) {
+            if let leftNode = node?.left {
+                traverse(node: leftNode)
+            }
+            data.append(node)
+            if let rightNode = node?.right {
+                traverse(node: rightNode)
+            }
+        }
+        traverse(node: root)
+        let nodeValues = data.compactMap({$0?.value})
+        print(nodeValues)
+        return data
+    }
+    
     func dfsPostOrder() -> [Node<T>?] {
         let root = self.root
         var data = [Node<T>?]()
@@ -130,3 +149,4 @@ bst.insert(value: 15)
 bst.insert(value: 20)
 bst.bfs()
 bst.dfsPreOrder()
+bst.dfsInOrder()
